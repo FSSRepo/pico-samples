@@ -6,6 +6,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "fonts/8x8_font.h"
+#include "fonts/12x16_font.h"
+
 #define ILI9341_NOP         0x00 ///< No-op register
 #define ILI9341_SWRESET     0x01 ///< Software reset register
 #define ILI9341_RDDID       0x04 ///< Read display identification information
@@ -59,10 +62,17 @@
 #define ILI9341_GMCTRP1     0xE0 ///< Positive Gamma Correction
 #define ILI9341_GMCTRN1     0xE1 ///< Negative Gamma Correction
 
-#define     ILI9341_BLACK   0x0000
-#define     ILI9341_BLUE    0x001F
-#define     ILI9341_RED     0xF800
-#define     ILI9341_GREEN   0x07E0
+#define   ILI9341_BLACK   0x0000
+#define   ILI9341_BLUE    0x001F
+#define   ILI9341_RED     0xF800
+#define   ILI9341_GREEN   0x07E0
+#define   ILI9341_CYAN    0x07FF
+#define   ILI9341_MAGENTA 0xF81F
+#define   ILI9341_YELLOW  0xFFE0
+#define   ILI9341_WHITE   0xFFFF
+
+#define FONT_8x8 0
+#define FONT_12x16 1
 
 uint8_t initcmd[] = {
     24, // 24 commands
@@ -126,7 +136,7 @@ public:
         gpio_put(led, 1);
     }
 
-     void spiwrite(uint8_t b)
+    void spiwrite(uint8_t b)
     {
         spi_write_blocking(spi_port, &b, 1);
     }
@@ -264,5 +274,43 @@ public:
         spiwrite(lo);
         tft_cs_high();
     }
+
+    void text(const char* text, uint8_t offset_x, uint8_t offset_y, uint8_t font, uint16_t color) {
+        const unsigned char* font_data = (font == FONT_8x8 ? font_8x8 : font_12x16);
+        uint8_t font_width = font_data[0];
+        uint8_t font_height = font_data[1];
+        uint16_t n = 0;
+        uint16_t text_ofs = 0;
+        uint8_t line = 0;
+        while (text[text_ofs] != '\0') {
+            if (text[text_ofs] == '\n') {
+                n = 0;
+                line++;
+                text_ofs++;
+                continue;
+            }
+            if (text[text_ofs] < 32) {
+                text_ofs++; n++;
+                continue;
+            }
+            uint16_t seek = (text[text_ofs] - 32) * (font_width * font_height) / 8 + 2;
+            uint8_t b_seek = 0;
+            for (uint8_t x = 0; x < font_width; x++) {
+                for (uint8_t y = 0; y < font_height; y++) {
+                    if (font_data[seek] >> b_seek & 0b00000001) {
+                        drawPixel(x + offset_x + (n * font_width), y + offset_y + (font_height + 1) * line, color);
+                    }
+                    b_seek++;
+                    if (b_seek == 8) {
+                        b_seek = 0;
+                        seek++;
+                    }
+                }
+            }
+            n++;
+            text_ofs++;
+        }
+    }
+
 };
 #endif
