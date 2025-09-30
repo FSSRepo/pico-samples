@@ -13,6 +13,6 @@ int main() {
 
     sc->drawPixel(50, 170, ILI9341_CYAN);
 
-    sc->text("Hello world!\nThis is a test", 20, 180, FONT_8x8, ILI9341_YELLOW);
+    sc->text("Hello world!\nThis is a test\nOpen GL ES 1.0", 20, 180, FONT_8x8, ILI9341_YELLOW);
     return 0;
 }

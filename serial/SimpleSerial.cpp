@@ -38,7 +38,7 @@ SimpleSerial::SimpleSerial(char* com_port, DWORD COM_BAUD_RATE)
 				printf("Warning: could not set serial port params\n");
 			else {
 				connected_ = true;
-				PurgeComm(io_handler_, PURGE_RXCLEAR | PURGE_TXCLEAR);				
+				PurgeComm(io_handler_, PURGE_RXCLEAR | PURGE_TXCLEAR);
 			}
 		}
 	}
@@ -48,7 +48,7 @@ void SimpleSerial::CustomSyntax(string syntax_type) {
 
 	ifstream syntaxfile_exist("syntax_config.txt");
 
-	if (!syntaxfile_exist) {		
+	if (!syntaxfile_exist) {
 		ofstream syntaxfile;
 		syntaxfile.open("syntax_config.txt");
 
@@ -95,7 +95,7 @@ void SimpleSerial::CustomSyntax(string syntax_type) {
 string SimpleSerial::ReadSerialPort(int reply_wait_time, string syntax_type) {
 
 	DWORD bytes_read;
-	char inc_msg[1];	
+	char inc_msg[1];
 	string complete_inc_msg;
 	bool began = false;
 
@@ -103,14 +103,12 @@ string SimpleSerial::ReadSerialPort(int reply_wait_time, string syntax_type) {
 
 	unsigned long start_time = time(nullptr);
 
-	ClearCommError(io_handler_, &errors_, &status_);	
+	ClearCommError(io_handler_, &errors_, &status_);
 
 	while ((time(nullptr) - start_time) < reply_wait_time) {
 
 		if (status_.cbInQue > 0) {
-			
 			if (ReadFile(io_handler_, inc_msg, 1, &bytes_read, NULL)) {
-				
 				if (inc_msg[0] == front_delimiter_ || began) {
 					began = true;
 
@@ -119,18 +117,18 @@ string SimpleSerial::ReadSerialPort(int reply_wait_time, string syntax_type) {
 
 					if (inc_msg[0] != front_delimiter_)
 						complete_inc_msg.append(inc_msg, 1);
-				}				
+				}
 			}
 			else
 				return "Warning: Failed to receive data.\n";
 		}
 	}
-	return complete_inc_msg;		
+	return complete_inc_msg;
 }
 
 bool SimpleSerial::WriteSerialPort(char *data_sent)
 {
-	DWORD bytes_sent;	
+	DWORD bytes_sent;
 
 	unsigned int data_sent_length = strlen(data_sent);
 
@@ -157,6 +155,6 @@ SimpleSerial::~SimpleSerial()
 {
 	if (connected_) {
 		connected_ = false;
-		CloseHandle(io_handler_);		
+		CloseHandle(io_handler_);
 	}
 }

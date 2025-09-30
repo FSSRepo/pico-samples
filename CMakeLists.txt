@@ -10,19 +10,31 @@ pico_sdk_init()
 
 include_directories(include)
 
-add_executable(${PROJECT_NAME}
+add_library(pico-libs
+	STATIC
 	libs/display7segments.cpp
 	libs/ili9341.cpp
 	libs/servo.cpp
 	libs/ssd1306.cpp
 	libs/shift_register.cpp
-	libs/st7735.cpp
-	ili9341_sample.cpp)
+	libs/st7735.cpp)
 
-pico_enable_stdio_usb(${PROJECT_NAME} 1)
-pico_enable_stdio_uart(${PROJECT_NAME} 0)
+add_executable(ili9341-sample
+	example/ili9341_sample.cpp)
 
-pico_add_extra_outputs(${PROJECT_NAME})
+add_executable(st7735-sample
+	example/st7735_sample.cpp)
 
-# pull in common dependencies
-target_link_libraries(${PROJECT_NAME} pico_stdlib hardware_i2c hardware_spi hardware_pwm hardware_adc pico_multicore)
+pico_enable_stdio_usb(ili9341-sample 1)
+pico_enable_stdio_uart(ili9341-sample 0)
+
+pico_add_extra_outputs(ili9341-sample)
+
+pico_enable_stdio_usb(st7735-sample 1)
+pico_enable_stdio_uart(st7735-sample 0)
+
+pico_add_extra_outputs(st7735-sample)
+
+target_link_libraries(pico-libs pico_stdlib hardware_i2c hardware_spi hardware_pwm)
+target_link_libraries(ili9341-sample pico-libs pico_stdlib)
+target_link_libraries(st7735-sample pico-libs pico_stdlib)

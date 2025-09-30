@@ -32,8 +32,6 @@ uint8_t initcmd[] = {
     0x00                  // End of list
 };
 
-
-
 int def_width = 240, def_height = 320;
 
 ILI9341::ILI9341(spi_inst_t *spi, int mosi, int sck, int cs, int dc, int rst, int led) : cs(cs), dc(dc), rst(rst), spi_port(spi)
