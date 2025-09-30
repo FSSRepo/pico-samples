@@ -82,6 +82,7 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "valarray": "c",
-        "ili9341.h": "c"
+        "ili9341.h": "c",
+        "span": "c"
     }
 }

@@ -12,7 +12,7 @@ include_directories(include)
 
 add_executable(${PROJECT_NAME}
 	libs/display7segments.cpp
-	# libs/ili9341.cpp
+	libs/ili9341.cpp
 	libs/servo.cpp
 	libs/ssd1306.cpp
 	libs/shift_register.cpp
