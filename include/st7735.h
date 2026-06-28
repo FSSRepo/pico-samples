@@ -98,5 +98,7 @@ public:
     void drawPixel(uint8_t x, uint8_t y, uint16_t color);
     
     void text(const char* text, uint8_t x, uint8_t y, uint8_t font, uint16_t color);
+
+    void drawImage(uint8_t x, uint8_t y, uint8_t w, uint8_t h, const uint16_t* data);
 };
 #endif

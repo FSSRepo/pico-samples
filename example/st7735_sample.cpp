@@ -7,7 +7,7 @@ int main() {
     sc->start();
     sc->fillScreen(ST7735_WHITE);
 
-    sc->fillRectangle(30, 30, 50, 50, ST7735_BLUE);
+    sc->fillRectangle(30, 30, 50, 50, ST7735_YELLOW);
 
     sc->text("Hello world!\nThis is a test", 2, 2, FONT_8x8, ST7735_BLACK);
     return 0;

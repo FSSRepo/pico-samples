@@ -233,3 +233,22 @@ void ST7735::text(const char* text, uint8_t offset_x, uint8_t offset_y, uint8_t 
         text_ofs++;
     }
 }
+
+void ST7735::drawImage(uint8_t x, uint8_t y, uint8_t w, uint8_t h, const uint16_t* data) {
+    if ((x >= _width) || (y >= _height))
+        return;
+    if ((x + w - 1) >= _width)
+        w = _width - x;
+    if ((y + h - 1) >= _height)
+        h = _height - y;
+
+    setAddrWindow(x, y, x + w - 1, y + h - 1);
+    tft_dc_high();
+    tft_cs_low();
+    for (int i = 0; i < w * h; i++) {
+        uint16_t color = data[i];
+        spiwrite(color >> 8);
+        spiwrite(color & 0xFF);
+    }
+    tft_cs_high();
+}

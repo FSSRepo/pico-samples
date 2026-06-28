@@ -1,0 +1,2 @@
+rootProject.name = "Sistema de riego App"
+include ':app'
